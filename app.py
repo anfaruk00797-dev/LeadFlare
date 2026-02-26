@@ -35,3 +35,19 @@ def dashboard():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# register
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = generate_password_hash(request.form.get("password"))
+
+        user = User(username=username, password=password)
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
