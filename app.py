@@ -8,6 +8,7 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secretkey"
@@ -73,3 +74,30 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("home"))
+
+
+@app.route("/create_event", methods=["GET", "POST"])
+@login_required
+def create_event():
+    if request.method == "POST":
+        title = request.form.get("title")
+        description = request.form.get("description")
+        event_date = datetime.strptime(
+            request.form.get("event_date"), "%Y-%m-%d"
+        ).date()
+        reminder_days = int(request.form.get("reminder_days"))
+
+        new_event = Event(
+            title=title,
+            description=description,
+            event_date=event_date,
+            reminder_days=reminder_days,
+            user=current_user,
+        )
+
+        db.session.add(new_event)
+        db.session.commit()
+
+        return redirect(url_for("dashboard"))
+
+    return render_template("create_event.html")
