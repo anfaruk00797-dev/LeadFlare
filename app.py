@@ -9,6 +9,7 @@ from flask_login import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, date
+from datetime import date, timedelta
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secretkey"
@@ -31,7 +32,19 @@ def home():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    today = date.today()
+    upcoming_events = []
+
+    events = current_user.events
+
+    for event in events:
+        reminder_start = event.event_date - timedelta(days=event.reminder_days)
+
+        if reminder_start <= today <= event.event_date:
+            days_left = (event.event_date - today).days
+            upcoming_events.append((event, days_left))
+
+    return render_template("dashboard.html", upcoming_events=upcoming_events)
 
 
 if __name__ == "__main__":
