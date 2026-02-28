@@ -46,10 +46,6 @@ def dashboard():
     return render_template("dashboard.html", upcoming_events=upcoming_events)
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
-
 # register
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -113,3 +109,7 @@ def create_event():
         return redirect(url_for("dashboard"))
 
     return render_template("create_event.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
