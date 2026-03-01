@@ -135,5 +135,41 @@ def event_detail(event_id):
     return render_template("event_detail.html", event=event)
 
 
+@app.route("/edit_event/<int:event_id>", methods=["GET", "POST"])
+@login_required
+def edit_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    if event.user != current_user:
+        return redirect(url_for("dashboard"))
+
+    if request.method == "POST":
+        event.title = request.form.get("title")
+        event.description = request.form.get("description")
+        event.event_date = datetime.strptime(
+            request.form.get("event_date"), "%Y-%m-%d"
+        ).date()
+        event.reminder_days = int(request.form.get("reminder_days"))
+
+        db.session.commit()
+        return redirect(url_for("dashboard"))
+
+    return render_template("edit_event.html", event=event)
+
+
+@app.route("/delete_event/<int:event_id>")
+@login_required
+def delete_event(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    if event.user != current_user:
+        return redirect(url_for("dashboard"))
+
+    db.session.delete(event)
+    db.session.commit()
+
+    return redirect(url_for("dashboard"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
