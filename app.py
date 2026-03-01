@@ -118,5 +118,22 @@ def create_event():
     return render_template("create_event.html")
 
 
+@app.route("/event/<int:event_id>", methods=["GET", "POST"])
+@login_required
+def event_detail(event_id):
+    event = Event.query.get_or_404(event_id)
+
+    # ป้องกันดู event ของคนอื่น
+    if event.user != current_user:
+        return redirect(url_for("dashboard"))
+
+    if request.method == "POST":
+        event.preparation_note = request.form.get("preparation_note")
+        db.session.commit()
+        return redirect(url_for("event_detail", event_id=event.id))
+
+    return render_template("event_detail.html", event=event)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
