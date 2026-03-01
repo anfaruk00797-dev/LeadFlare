@@ -59,3 +59,23 @@
 {% endif %}
 
 {% endblock %}
+
+<hr>
+
+<h2>📁 Past Events</h2>
+
+{% if past_events %}
+{% for event, days_ago in past_events %}
+<div class="card mb-3 bg-light">
+    <div class="card-body">
+        <h5>{{ event.title }}</h5>
+        <p>
+            Date: {{ event.event_date }} <br>
+            {{ days_ago }} days ago
+        </p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p>No past events.</p>
+{% endif %}

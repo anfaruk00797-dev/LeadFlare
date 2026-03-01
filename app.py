@@ -43,24 +43,32 @@ def dashboard():
 
     reminder_events = []
     all_upcoming_events = []
+    past_events = []
 
     events = current_user.events
 
     for event in events:
-        # ทุก event ที่ยังไม่ถึงวันจริง
-        if event.event_date >= today:
-            days_left = (event.event_date - today).days
+        days_left = (event.event_date - today).days
+
+        if days_left >= 0:
             all_upcoming_events.append((event, days_left))
 
-            # เฉพาะช่วง reminder
             reminder_start = event.event_date - timedelta(days=event.reminder_days)
             if reminder_start <= today <= event.event_date:
                 reminder_events.append((event, days_left))
+        else:
+            past_events.append((event, abs(days_left)))
+
+    # 🔥 sort ใกล้สุดก่อน
+    reminder_events.sort(key=lambda x: x[1])
+    all_upcoming_events.sort(key=lambda x: x[1])
+    past_events.sort(key=lambda x: x[1])
 
     return render_template(
         "dashboard.html",
         reminder_events=reminder_events,
         all_upcoming_events=all_upcoming_events,
+        past_events=past_events,
     )
 
 
