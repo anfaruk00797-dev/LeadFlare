@@ -1,19 +1,32 @@
-<h2>{{ event.title }}</h2>
+<!DOCTYPE html>
+<html>
 
-<p><strong>Date:</strong> {{ event.event_date }}</p>
-<p><strong>Description:</strong> {{ event.description }}</p>
+<head>
+    <title>Event Detail</title>
+</head>
 
-<hr>
+<body>
 
-<h3>Preparation Notes</h3>
+    <h2>{{ event.title }}</h2>
 
-<form method="POST">
-    <textarea name="preparation_note" rows="5" cols="50">
+    <p>Date: {{ event.event_date }}</p>
+    <p>Description: {{ event.description }}</p>
+
+    <hr>
+
+    <h3>Preparation Notes</h3>
+
+    <form method="POST">
+        <textarea name="preparation_note" rows="5" cols="50">
 {{ event.preparation_note or "" }}
     </textarea>
-    <br><br>
-    <button type="submit">Save Notes</button>
-</form>
+        <br><br>
+        <button type="submit">Save Notes</button>
+    </form>
 
-<br>
-<a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    <br>
+    <a href="{{ url_for('dashboard') }}">Back</a>
+
+</body>
+
+</html>
