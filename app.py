@@ -40,18 +40,28 @@ def home():
 @login_required
 def dashboard():
     today = date.today()
-    upcoming_events = []
+
+    reminder_events = []
+    all_upcoming_events = []
 
     events = current_user.events
 
     for event in events:
-        reminder_start = event.event_date - timedelta(days=event.reminder_days)
-
-        if reminder_start <= today <= event.event_date:
+        # ทุก event ที่ยังไม่ถึงวันจริง
+        if event.event_date >= today:
             days_left = (event.event_date - today).days
-            upcoming_events.append((event, days_left))
+            all_upcoming_events.append((event, days_left))
 
-    return render_template("dashboard.html", upcoming_events=upcoming_events)
+            # เฉพาะช่วง reminder
+            reminder_start = event.event_date - timedelta(days=event.reminder_days)
+            if reminder_start <= today <= event.event_date:
+                reminder_events.append((event, days_left))
+
+    return render_template(
+        "dashboard.html",
+        reminder_events=reminder_events,
+        all_upcoming_events=all_upcoming_events,
+    )
 
 
 @app.route("/register", methods=["GET", "POST"])
