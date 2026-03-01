@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
-from flask_login import UserMixin
 
 
 class User(UserMixin, db.Model):
@@ -17,7 +17,6 @@ class Event(db.Model):
 
     event_date = db.Column(db.Date, nullable=False)
     reminder_days = db.Column(db.Integer, default=0)
-    preparation_note = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = db.relationship("User", backref="events")
