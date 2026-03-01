@@ -2,80 +2,47 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 
-<h2>🔔 Reminder Events</h2>
+<a href="{{ url_for('create_event') }}" class="btn btn-primary mb-3">
+    + Create Event
+</a>
 
-{% if reminder_events %}
+<h3>🔔 Reminder Events</h3>
 {% for event, days_left in reminder_events %}
-<div class="card mb-3 border-danger">
+<div class="card mb-2 border-danger">
     <div class="card-body">
-        <h5 class="card-title">
-            <a href="{{ url_for('event_detail', event_id=event.id) }}">
-                {{ event.title }}
-            </a>
-        </h5>
-
-        <p>
-            Date: {{ event.event_date }} <br>
-            <span class="text-danger fw-bold">
-                {{ days_left }} days left
-            </span>
-        </p>
+        <a href="{{ url_for('event_detail', event_id=event.id) }}">
+            <strong>{{ event.title }}</strong>
+        </a>
+        <br>
+        {{ days_left }} days left
     </div>
 </div>
 {% endfor %}
-{% else %}
-<p>No events in reminder range.</p>
-{% endif %}
 
 <hr>
 
-<h2>📅 All Upcoming Events</h2>
-
-{% if all_upcoming_events %}
+<h3>📅 All Upcoming</h3>
 {% for event, days_left in all_upcoming_events %}
-<div class="card mb-3">
+<div class="card mb-2">
     <div class="card-body">
-        <h5 class="card-title">
-            <a href="{{ url_for('event_detail', event_id=event.id) }}">
-                {{ event.title }}
-            </a>
-        </h5>
-
-        <p>
-            Date: {{ event.event_date }} <br>
-            {{ days_left }} days left
-        </p>
-
-        <a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-warning btn-sm">Edit</a>
-        <a href="{{ url_for('delete_event', event_id=event.id) }}" class="btn btn-danger btn-sm"
-            onclick="return confirm('Delete this event?');">
-            Delete
+        <a href="{{ url_for('event_detail', event_id=event.id) }}">
+            <strong>{{ event.title }}</strong>
         </a>
+        <br>
+        {{ days_left }} days left
     </div>
 </div>
 {% endfor %}
-{% else %}
-<p>No upcoming events.</p>
-{% endif %}
+
+<hr>
+
+<h3>📁 Past Events</h3>
+{% for event, days_ago in past_events %}
+<div class="card mb-2 bg-light">
+    <div class="card-body">
+        {{ event.title }} - {{ days_ago }} days ago
+    </div>
+</div>
+{% endfor %}
 
 {% endblock %}
-
-<hr>
-
-<h2>📁 Past Events</h2>
-
-{% if past_events %}
-{% for event, days_ago in past_events %}
-<div class="card mb-3 bg-light">
-    <div class="card-body">
-        <h5>{{ event.title }}</h5>
-        <p>
-            Date: {{ event.event_date }} <br>
-            {{ days_ago }} days ago
-        </p>
-    </div>
-</div>
-{% endfor %}
-{% else %}
-<p>No past events.</p>
-{% endif %}

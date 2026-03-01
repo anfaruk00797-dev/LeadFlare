@@ -1,20 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Edit Event{% endblock %}
+{% block content %}
+
 <h2>Edit Event</h2>
 
 <form method="POST">
-    <label>Title</label><br>
-    <input type="text" name="title" value="{{ event.title }}"><br><br>
-
-    <label>Description</label><br>
-    <textarea name="description">{{ event.description }}</textarea><br><br>
-
-    <label>Date</label><br>
-    <input type="date" name="event_date" value="{{ event.event_date }}"><br><br>
-
-    <label>Reminder Days</label><br>
-    <input type="number" name="reminder_days" value="{{ event.reminder_days }}"><br><br>
-
-    <button type="submit">Update</button>
+    <input class="form-control mb-2" name="title" value="{{ event.title }}" required>
+    <textarea class="form-control mb-2" name="description">{{ event.description }}</textarea>
+    <input class="form-control mb-2" type="date" name="event_date" value="{{ event.event_date }}">
+    <input class="form-control mb-2" type="number" name="reminder_days" value="{{ event.reminder_days }}">
+    <button class="btn btn-warning">Update</button>
 </form>
 
-<br>
-<a href="{{ url_for('dashboard') }}">Back</a>
+{% endblock %}

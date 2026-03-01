@@ -1,32 +1,22 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block title %}Event Detail{% endblock %}
+{% block content %}
 
-<head>
-    <title>Event Detail</title>
-</head>
+<h2>{{ event.title }}</h2>
 
-<body>
+<p>{{ event.description }}</p>
+<p>Date: {{ event.event_date }}</p>
 
-    <h2>{{ event.title }}</h2>
+<h4>Preparation Notes</h4>
 
-    <p>Date: {{ event.event_date }}</p>
-    <p>Description: {{ event.description }}</p>
-
-    <hr>
-
-    <h3>Preparation Notes</h3>
-
-    <form method="POST">
-        <textarea name="preparation_note" rows="5" cols="50">
-{{ event.preparation_note or "" }}
+<form method="POST">
+    <textarea class="form-control mb-2" name="preparation_note">
+{{ event.preparation_note }}
     </textarea>
-        <br><br>
-        <button type="submit">Save Notes</button>
-    </form>
+    <button class="btn btn-primary">Save Note</button>
+</form>
 
-    <br>
-    <a href="{{ url_for('dashboard') }}">Back</a>
+<a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-warning mt-2">Edit</a>
+<a href="{{ url_for('delete_event', event_id=event.id) }}" class="btn btn-danger mt-2">Delete</a>
 
-</body>
-
-</html>
+{% endblock %}

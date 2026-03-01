@@ -1,14 +1,8 @@
 {% extends "base.html" %}
-
 {% block title %}Home{% endblock %}
-
 {% block content %}
-<div class="text-center mt-5">
-    <h1>Welcome to Event Reminder</h1>
-    <p class="lead">Manage your important events and prepare in advance.</p>
-
-    {% if not current_user.is_authenticated %}
-    <a href="{{ url_for('register') }}" class="btn btn-success">Get Started</a>
-    {% endif %}
+<div class="text-center">
+    <h1>Welcome to LeadFlare</h1>
+    <p>Smart Event Reminder System</p>
 </div>
 {% endblock %}
