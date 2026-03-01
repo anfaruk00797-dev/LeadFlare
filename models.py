@@ -9,15 +9,15 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+    events = db.relationship("Event", backref="user", cascade="all, delete")
+
 
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
-
     event_date = db.Column(db.Date, nullable=False)
     reminder_days = db.Column(db.Integer, default=0)
     preparation_note = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    user = db.relationship("User", backref="events")
