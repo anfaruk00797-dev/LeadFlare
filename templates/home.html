@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Home</title>
-</head>
+{% block title %}Home{% endblock %}
 
-<body>
+{% block content %}
+<div class="text-center mt-5">
+    <h1>Welcome to Event Reminder</h1>
+    <p class="lead">Manage your important events and prepare in advance.</p>
 
-    <h1>Event Reminder App</h1>
-
-    <a href="{{ url_for('register') }}">Register</a> |
-    <a href="{{ url_for('login') }}">Login</a>
-
-</body>
-
-</html>
+    {% if not current_user.is_authenticated %}
+    <a href="{{ url_for('register') }}" class="btn btn-success">Get Started</a>
+    {% endif %}
+</div>
+{% endblock %}
