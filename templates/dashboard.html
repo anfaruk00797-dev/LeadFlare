@@ -1,31 +1,39 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container mt-4">
-    <h2>Dashboard</h2>
+<!DOCTYPE html>
+<html>
 
-    <a href="{{ url_for('create_event') }}" class="btn btn-success mb-3">
-        Create Event
-    </a>
+<head>
+    <title>Dashboard</title>
+</head>
 
-    <h4>Upcoming Preparation</h4>
+<body>
 
+    <h1>Welcome, {{ current_user.username }}</h1>
+
+    <a href="{{ url_for('create_event') }}">+ Create New Event</a> |
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <hr>
+
+    <h2>Upcoming Events</h2>
+
+    {% if upcoming_events %}
     {% for event, days_left in upcoming_events %}
-    <div class="card mb-2 p-3">
-        <h5>{{ event.title }}</h5>
-        <p>{{ event.description }}</p>
-
-        {% if days_left > 0 %}
-        <span class="badge bg-warning">
-            {{ days_left }} days left
-        </span>
-        {% else %}
-        <span class="badge bg-danger">
-            Today!
-        </span>
-        {% endif %}
+    <div style="margin-bottom:15px;">
+        <strong>
+            <a href="{{ url_for('event_detail', event_id=event.id) }}">
+                {{ event.title }}
+            </a>
+        </strong>
+        <br>
+        Date: {{ event.event_date }} <br>
+        {{ days_left }} days left
     </div>
-    {% else %}
-    <p>No upcoming events.</p>
+    <hr>
     {% endfor %}
-</div>
-{% endblock %}
+    {% else %}
+    <p>No upcoming events in reminder range.</p>
+    {% endif %}
+
+</body>
+
+</html>
