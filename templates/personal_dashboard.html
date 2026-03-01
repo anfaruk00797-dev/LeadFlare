@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Personal Dashboard{% endblock %}
+
+{% block content %}
+<h2>🔥 Your Habits</h2>
+
+<a href="{{ url_for('create_habit') }}" class="btn btn-primary mb-3">+ Add Habit</a>
+
+{% for habit in habits %}
+<div class="card mb-2">
+    <div class="card-body">
+        <h5>{{ habit.name }}</h5>
+        <p>🔥 Fire: {{ habit.fire_count }}</p>
+        <p>🛡 Shield: {{ habit.shield_remaining }}</p>
+        <a href="{{ url_for('complete_habit', id=habit.id) }}" class="btn btn-success btn-sm">Complete Today</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,48 +1,137 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
+
 {% block content %}
 
-<a href="{{ url_for('create_event') }}" class="btn btn-primary mb-3">
-    + Create Event
-</a>
+<div class="container-fluid">
 
-<h3>🔔 Reminder Events</h3>
-{% for event, days_left in reminder_events %}
-<div class="card mb-2 border-danger">
-    <div class="card-body">
-        <a href="{{ url_for('event_detail', event_id=event.id) }}">
-            <strong>{{ event.title }}</strong>
-        </a>
-        <br>
-        {{ days_left }} days left
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Command Center</h2>
+            <p class="text-muted mb-0">Overview of your productivity & team performance</p>
+        </div>
+        <div>
+            <a href="{{ url_for('personal_dashboard') }}" class="btn btn-outline-primary me-2">
+                Personal
+            </a>
+            <a href="{{ url_for('team_dashboard') }}" class="btn btn-outline-success">
+                Team
+            </a>
+        </div>
     </div>
-</div>
-{% endfor %}
 
-<hr>
+    <!-- STATS ROW -->
+    <div class="row g-4">
 
-<h3>📅 All Upcoming</h3>
-{% for event, days_left in all_upcoming_events %}
-<div class="card mb-2">
-    <div class="card-body">
-        <a href="{{ url_for('event_detail', event_id=event.id) }}">
-            <strong>{{ event.title }}</strong>
-        </a>
-        <br>
-        {{ days_left }} days left
+        <!-- TOTAL HABITS -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Habits</h6>
+                    <h2 class="fw-bold">{{ total_habits }}</h2>
+                    <small class="text-muted">Active personal habits</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOTAL FIRE -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Fire</h6>
+                    <h2 class="fw-bold text-danger">{{ total_fire }} 🔥</h2>
+                    <small class="text-muted">Current streak power</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- LONGEST FIRE -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Longest Streak</h6>
+                    <h2 class="fw-bold">{{ longest_fire }}</h2>
+                    <small class="text-muted">Best discipline record</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJECT COUNT -->
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Projects</h6>
+                    <h2 class="fw-bold">{{ total_projects }}</h2>
+                    <small class="text-muted">Team initiatives</small>
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
-{% endfor %}
 
-<hr>
+    <!-- SECOND ROW -->
+    <div class="row g-4 mt-1">
 
-<h3>📁 Past Events</h3>
-{% for event, days_ago in past_events %}
-<div class="card mb-2 bg-light">
-    <div class="card-body">
-        {{ event.title }} - {{ days_ago }} days ago
+        <!-- TOTAL TASKS -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Tasks</h6>
+                    <h2 class="fw-bold">{{ total_tasks }}</h2>
+                    <small class="text-muted">Across all projects</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPLETED -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Completed Tasks</h6>
+                    <h2 class="fw-bold text-success">{{ completed_tasks }}</h2>
+                    <small class="text-muted">Tasks marked as done</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- OVERDUE -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Overdue Tasks</h6>
+                    <h2 class="fw-bold text-danger">{{ overdue_tasks }}</h2>
+                    <small class="text-muted">Need immediate attention</small>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <!-- PROGRESS SECTION -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h5 class="fw-bold mb-3">Team Completion Rate</h5>
+
+                    {% if total_tasks > 0 %}
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar bg-success fw-bold" role="progressbar"
+                            style="width: {{ completion_rate }}%;">
+                            {{ completion_rate }}%
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No tasks yet. Start by creating a project.</p>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-{% endfor %}
 
 {% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Create Project{% endblock %}
+
+{% block content %}
+<h2>Create Project</h2>
+
+<form method="POST">
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="Project name" required>
+    </div>
+
+    <div class="mb-3">
+        <textarea name="description" class="form-control" placeholder="Project description"></textarea>
+    </div>
+
+    <button class="btn btn-primary">Create</button>
+</form>
+{% endblock %}

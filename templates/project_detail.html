@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Project Detail{% endblock %}
+
+{% block content %}
+<h2>{{ project.name }}</h2>
+<p>{{ project.description }}</p>
+
+<a href="{{ url_for('create_task', project_id=project.id) }}" class="btn btn-primary mb-3">
+    + Add Task
+</a>
+
+{% set total = project.tasks|length %}
+{% set done = project.tasks|selectattr("status", "equalto", "Done")|list|length %}
+{% if total > 0 %}
+<div class="progress mb-3">
+    <div class="progress-bar bg-success" style="width: {{ (done/total)*100 }}%">
+        {{ ((done/total)*100)|round(0) }}%
+    </div>
+</div>
+{% endif %}
+
+{% for task in project.tasks %}
+<div class="card mb-2">
+    <div class="card-body">
+        <h5>{{ task.title }}</h5>
+        <p>{{ task.description }}</p>
+        <p>Status: <strong>{{ task.status }}</strong></p>
+
+        <a href="{{ url_for('update_task_status', id=task.id, status='To Do') }}" class="btn btn-secondary btn-sm">To
+            Do</a>
+        <a href="{{ url_for('update_task_status', id=task.id, status='In Progress') }}"
+            class="btn btn-warning btn-sm">In Progress</a>
+        <a href="{{ url_for('update_task_status', id=task.id, status='Done') }}" class="btn btn-success btn-sm">Done</a>
+    </div>
+</div>
+{% else %}
+<p>No tasks yet.</p>
+{% endfor %}
+
+{% endblock %}
