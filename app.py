@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import (
     LoginManager,
     login_user,
@@ -36,6 +36,7 @@ def home():
     return render_template("home.html")
 
 
+# 🔥 DASHBOARD (SORT + REMINDER + PAST)
 @app.route("/dashboard")
 @login_required
 def dashboard():
@@ -59,7 +60,7 @@ def dashboard():
         else:
             past_events.append((event, abs(days_left)))
 
-    # 🔥 sort ใกล้สุดก่อน
+    # 🔥 Sort ใกล้สุดก่อน
     reminder_events.sort(key=lambda x: x[1])
     all_upcoming_events.sort(key=lambda x: x[1])
     past_events.sort(key=lambda x: x[1])
@@ -72,16 +73,23 @@ def dashboard():
     )
 
 
+# 🔥 REGISTER (กัน username ซ้ำ)
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form.get("username")
         password = generate_password_hash(request.form.get("password"))
 
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash("Username already exists", "danger")
+            return redirect(url_for("register"))
+
         user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
 
+        flash("Account created successfully!", "success")
         return redirect(url_for("login"))
 
     return render_template("register.html")
@@ -97,7 +105,10 @@ def login():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
+            flash("Login successful!", "success")
             return redirect(url_for("dashboard"))
+        else:
+            flash("Invalid username or password", "danger")
 
     return render_template("login.html")
 
@@ -106,6 +117,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash("Logged out successfully.", "info")
     return redirect(url_for("home"))
 
 
@@ -131,6 +143,7 @@ def create_event():
         db.session.add(new_event)
         db.session.commit()
 
+        flash("Event created successfully!", "success")
         return redirect(url_for("dashboard"))
 
     return render_template("create_event.html")
@@ -141,13 +154,13 @@ def create_event():
 def event_detail(event_id):
     event = Event.query.get_or_404(event_id)
 
-    # ป้องกันดู event ของคนอื่น
     if event.user != current_user:
         return redirect(url_for("dashboard"))
 
     if request.method == "POST":
         event.preparation_note = request.form.get("preparation_note")
         db.session.commit()
+        flash("Preparation note updated!", "success")
         return redirect(url_for("event_detail", event_id=event.id))
 
     return render_template("event_detail.html", event=event)
@@ -170,6 +183,7 @@ def edit_event(event_id):
         event.reminder_days = int(request.form.get("reminder_days"))
 
         db.session.commit()
+        flash("Event updated successfully!", "success")
         return redirect(url_for("dashboard"))
 
     return render_template("edit_event.html", event=event)
@@ -186,6 +200,7 @@ def delete_event(event_id):
     db.session.delete(event)
     db.session.commit()
 
+    flash("Event deleted.", "info")
     return redirect(url_for("dashboard"))
 
 
