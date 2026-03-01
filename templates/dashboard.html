@@ -1,49 +1,43 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Dashboard</title>
-</head>
+{% block title %}Dashboard{% endblock %}
 
-<body>
+{% block content %}
 
-    <h1>Welcome, {{ current_user.username }}</h1>
+<h2>Your Events</h2>
 
-    <a href="{{ url_for('create_event') }}">+ Create New Event</a> |
-    <a href="{{ url_for('logout') }}">Logout</a>
+<a href="{{ url_for('create_event') }}" class="btn btn-primary mb-3">
+    + Create Event
+</a>
 
-    <hr>
-
-    <h2>Upcoming Events</h2>
-
-    {% if upcoming_events %}
-    {% for event, days_left in upcoming_events %}
-    <div style="margin-bottom:15px;">
-
-        <strong>
+{% if upcoming_events %}
+{% for event, days_left in upcoming_events %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">
             <a href="{{ url_for('event_detail', event_id=event.id) }}">
                 {{ event.title }}
             </a>
-        </strong>
-        <br>
+        </h5>
 
-        Date: {{ event.event_date }} <br>
-        {{ days_left }} days left
-        <br><br>
+        <p class="card-text">
+            Date: {{ event.event_date }} <br>
+            <span class="text-danger">
+                {{ days_left }} days left
+            </span>
+        </p>
 
-        <a href="{{ url_for('edit_event', event_id=event.id) }}">Edit</a> |
-        <a href="{{ url_for('delete_event', event_id=event.id) }}"
-            onclick="return confirm('Are you sure you want to delete this event?');">
+        <a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+        <a href="{{ url_for('delete_event', event_id=event.id) }}" class="btn btn-danger btn-sm"
+            onclick="return confirm('Delete this event?');">
             Delete
         </a>
-
     </div>
-    <hr>
-    {% endfor %}
-    {% else %}
-    <p>No upcoming events in reminder range.</p>
-    {% endif %}
+</div>
+{% endfor %}
+{% else %}
+<p>No upcoming events.</p>
+{% endif %}
 
-</body>
-
-</html>
+{% endblock %}
