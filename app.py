@@ -8,7 +8,7 @@ from flask_login import (
     current_user,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secretkey"
@@ -21,6 +21,12 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 from models import *
+
+
+# ✅ สำคัญมาก — แก้ error Missing user_loader
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 @app.route("/")
