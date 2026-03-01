@@ -1,17 +1,38 @@
 {% extends "base.html" %}
-
 {% block title %}Dashboard{% endblock %}
-
 {% block content %}
 
-<h2>Your Events</h2>
+<h2>🔔 Reminder Events</h2>
 
-<a href="{{ url_for('create_event') }}" class="btn btn-primary mb-3">
-    + Create Event
-</a>
+{% if reminder_events %}
+{% for event, days_left in reminder_events %}
+<div class="card mb-3 border-danger">
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{{ url_for('event_detail', event_id=event.id) }}">
+                {{ event.title }}
+            </a>
+        </h5>
 
-{% if upcoming_events %}
-{% for event, days_left in upcoming_events %}
+        <p>
+            Date: {{ event.event_date }} <br>
+            <span class="text-danger fw-bold">
+                {{ days_left }} days left
+            </span>
+        </p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p>No events in reminder range.</p>
+{% endif %}
+
+<hr>
+
+<h2>📅 All Upcoming Events</h2>
+
+{% if all_upcoming_events %}
+{% for event, days_left in all_upcoming_events %}
 <div class="card mb-3">
     <div class="card-body">
         <h5 class="card-title">
@@ -20,15 +41,12 @@
             </a>
         </h5>
 
-        <p class="card-text">
+        <p>
             Date: {{ event.event_date }} <br>
-            <span class="text-danger">
-                {{ days_left }} days left
-            </span>
+            {{ days_left }} days left
         </p>
 
         <a href="{{ url_for('edit_event', event_id=event.id) }}" class="btn btn-warning btn-sm">Edit</a>
-
         <a href="{{ url_for('delete_event', event_id=event.id) }}" class="btn btn-danger btn-sm"
             onclick="return confirm('Delete this event?');">
             Delete
